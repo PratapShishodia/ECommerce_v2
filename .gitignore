@@ -1,0 +1,54 @@
+# ==========================================
+# Environment files
+# ==========================================
+ecommerce_frontend/.env
+ecommerce_frontend/.env.*
+
+ecommerce_backend/**/.env
+ecommerce_backend/**/.env.*
+
+# ==========================================
+# Node.js / Vite
+# ==========================================
+ecommerce_frontend/node_modules/
+ecommerce_frontend/dist/
+ecommerce_frontend/.vite/
+ecommerce_frontend/.cache/
+
+# Logs
+ecommerce_frontend/npm-debug.log*
+ecommerce_frontend/yarn-debug.log*
+ecommerce_frontend/yarn-error.log*
+ecommerce_frontend/pnpm-debug.log*
+
+# ==========================================
+# Java / Spring Boot
+# ==========================================
+ecommerce_backend/**/target/
+ecommerce_backend/**/build/
+ecommerce_backend/**/.gradle/
+ecommerce_backend/**/out/
+
+# IntelliJ
+ecommerce_backend/**/.idea/
+ecommerce_backend/**/*.iml
+
+# Eclipse
+ecommerce_backend/**/.project
+ecommerce_backend/**/.classpath
+ecommerce_backend/**/.settings/
+
+# VS Code
+.vscode/
+
+# ==========================================
+# Project Logs
+# ==========================================
+logs/
+*.log
+
+# ==========================================
+# OS Files
+# ==========================================
+.DS_Store
+Thumbs.db
