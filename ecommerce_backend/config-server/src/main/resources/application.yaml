@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: git
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/PratapShishodia/ECommerce_V2_config_server.git
+          default-label: main
+          timeout: 5
+          clone-on-start: true
+          force-pull: true
+          username: PratapShishodia
+          password: ${GIT_TOKEN}
+server:
+  port: 8080
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
