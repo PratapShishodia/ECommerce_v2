@@ -1,4 +1,4 @@
-package com.ps.common;
+package com.ps.common.event;
 
 import lombok.*;
 
