@@ -55,6 +55,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginResponseDTO signUp(UserRequestDTO requestDTO) {
+        if(userRepo.existsByEmail(requestDTO.getEmail())){
+            throw new RuntimeException("Email already Registered! Try Login");
+        }
+        if(userRepo.existsByMobileNumber(requestDTO.getMobileNumber())){
+            throw new RuntimeException("Mobile Number already Registered! Try Login");
+        }
         Users user = UserDTOMapper.toEntity(requestDTO);
         user.setPassword(encoder.encode(requestDTO.getPassword()));
         user.setActivationToken(UUID.randomUUID().toString());
@@ -80,6 +86,7 @@ public class UserServiceImpl implements UserService {
                 .message(body)
                 .recipient(savedUser.getEmail())
                 .build();
+        userProducer.sendUserEvent(userEvent);
         return new LoginResponseDTO("SignUp Successful. An activation mail is send to registered Email", UserDTOMapper.toDTO(savedUser), null,null);
     }
 
@@ -97,6 +104,9 @@ public class UserServiceImpl implements UserService {
             Users user = userDetails.getUser();
             if (userRepo.existsByEmailAndUserIdNot(requestDTO.getEmail(), user.getUserId())) {
                 throw new RuntimeException("Email ID already registered");
+            }
+            if (userRepo.existsByMobileNumberAndUserIdNot(requestDTO.getMobileNumber(), user.getUserId())) {
+                throw new RuntimeException("Mobile Number already registered");
             }
             if (requestDTO.getName() != null && !Objects.equals(user.getName(), requestDTO.getName())) {
                 System.out.println("Update Last Name");
