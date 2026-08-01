@@ -1,6 +1,6 @@
 package com.ps.userservice.service.impl;
 
-import com.ps.common.UserEvent;
+import com.ps.common.event.UserEvent;
 import com.ps.userservice.kafka.UserProducer;
 import com.ps.userservice.model.dto.UserRequestDTO;
 import com.ps.userservice.model.dto.UserResponseDTO;
@@ -70,6 +70,7 @@ public class UserServiceImpl implements UserService {
         else {
             user.setRoles("USER");
         }
+        user.setActivationToken_EXPIRATION(LocalDateTime.now().plusMinutes(15));
         Users savedUser = userRepo.save(user);
         String activationLink = "http://localhost:8080/api/user/activate?token=" + savedUser.getActivationToken();
         String subject = "Profile Activation Link";
@@ -165,15 +166,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean activateProfile(String activationToken) {
+    public void activateProfile(String activationToken) {
         Users user = userRepo.findByActivationToken(activationToken).orElseThrow(() -> new RuntimeException("User Not Found"));
+        if (user.getActivationToken_EXPIRATION().isBefore(LocalDateTime.now()))
+            throw new RuntimeException("Activation Link expired");
         user.setActive(true);
+        user.setActivationToken("");
         userRepo.save(user);
-        return true;
     }
 
     @Override
-    public boolean changePassword(UpdatePasswordDTO updatePasswordDTO) {
+    public void changePassword(UpdatePasswordDTO updatePasswordDTO) {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (userDetails != null) {
             Users user = userDetails.getUser();
@@ -182,13 +185,11 @@ public class UserServiceImpl implements UserService {
             }
             user.setPassword(encoder.encode(updatePasswordDTO.newPassword()));
             userRepo.save(user);
-            return true;
         }
-        return false;
     }
 
     @Override
-    public boolean resetPassword(String email, UpdatePasswordDTO updatePasswordDTO) {
+    public void resetPassword(String email, UpdatePasswordDTO updatePasswordDTO) {
         Users user = userRepo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -202,11 +203,10 @@ public class UserServiceImpl implements UserService {
         user.setOTPVerified(false);
 
         userRepo.save(user);
-        return true;
     }
 
     @Override
-    public boolean verifyOTP(String email, String OTP) {
+    public void verifyOTP(String email, String OTP) {
         Users user = userRepo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -223,6 +223,5 @@ public class UserServiceImpl implements UserService {
         user.setOTPVerified(true);
 
         userRepo.save(user);
-        return true;
     }
 }

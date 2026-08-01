@@ -27,15 +27,15 @@ spring:
           auth: true
           starttls:
             enable: true
-    kafka:
-      bootstrap-servers: localhost:9092
-      producer:
-        key-serializer: org.apache.kafka.common.serialization.StringSerializer
-        value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-        acks: all
-        retries: 3
-      topics:
-        users: user-topic
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+    topics:
+      user: user-topic
 
 server:
   port: ${APPLICATION_PORT}
@@ -57,16 +57,16 @@ jwt:
   AccessTokenExpiration : 900000
   refreshTokenExpiration : 604800000
 
-#eureka:
-#  instance:
-#    prefer-ip-address: true
-#  client:
-#    fetch-registry: true
-#    register-with-eureka: true
-#    service-url:
-#      defaultZone: http://localhost:9090/eureka/
-#    instance:
-#      instance-id: ${spring.application.name}:${server.port}
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: ${EUREKA_URL}
+    instance:
+      instance-id: ${spring.application.name}:${server.port}
 
 management:
   endpoints:

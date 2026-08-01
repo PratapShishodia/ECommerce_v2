@@ -1,6 +1,6 @@
 package com.ps.userservice.kafka;
 
-import com.ps.common.UserEvent;
+import com.ps.common.event.UserEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserProducer {
 
-    @Value("${kafka.topics.user}")
+    @Value("${spring.kafka.topics.user}")
     private String userTopic;
     private final KafkaTemplate<String, UserEvent> kafkaTemplate;
 

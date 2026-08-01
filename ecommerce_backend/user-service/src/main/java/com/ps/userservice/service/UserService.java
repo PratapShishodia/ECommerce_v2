@@ -15,8 +15,8 @@ public interface UserService {
     UserResponseDTO updateUser(UserRequestDTO requestDTO);
     LoginResponseDTO refreshToken(RefreshRequest request);
     void sendOTP(String email);
-    boolean activateProfile(String activationToken);
-    boolean changePassword(UpdatePasswordDTO updatePasswordDTO);
-    boolean resetPassword(String email,UpdatePasswordDTO updatePasswordDTO);
-    boolean verifyOTP(String email,String OTP);
+    void activateProfile(String activationToken);
+    void changePassword(UpdatePasswordDTO updatePasswordDTO);
+    void resetPassword(String email, UpdatePasswordDTO updatePasswordDTO);
+    void verifyOTP(String email, String OTP);
 }
