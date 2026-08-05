@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserEvent {
+public class UserCreatedEvent {
     private Long userId;
     private String recipient;
     private String message;

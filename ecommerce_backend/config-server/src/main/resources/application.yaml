@@ -7,7 +7,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/PratapShishodia/ECommerce_V2_config_server.git
+          uri: ${GIT_URL}
           default-label: main
           timeout: 5
           clone-on-start: true

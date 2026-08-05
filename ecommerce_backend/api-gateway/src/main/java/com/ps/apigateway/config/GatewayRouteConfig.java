@@ -21,6 +21,22 @@ public class GatewayRouteConfig {
                         .path("/api/notification/**")
                         .uri("lb://NOTIFICATION-SERVICE"))
 
+                .route("payment-service", r -> r
+                        .path("/api/payment/**")
+                        .uri("lb://PAYMENT-SERVICE"))
+
+                .route("product-service", r -> r
+                        .path("/api/product/**")
+                        .uri("lb://PRODUCT-SERVICE"))
+
+                .route("inventory-service", r -> r
+                        .path("/api/inventory/**")
+                        .uri("lb://INVENTORY-SERVICE"))
+
+                .route("order-service", r -> r
+                        .path("/api/order/**")
+                        .uri("lb://ORDER-SERVICE"))
+
                 .build();
     }
 }

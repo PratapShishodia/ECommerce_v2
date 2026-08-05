@@ -1,6 +1,6 @@
 package com.ps.userservice.kafka;
 
-import com.ps.common.event.UserEvent;
+import com.ps.common.event.UserCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,16 +14,16 @@ public class UserProducer {
 
     @Value("${spring.kafka.topics.user}")
     private String userTopic;
-    private final KafkaTemplate<String, UserEvent> kafkaTemplate;
+    private final KafkaTemplate<String, UserCreatedEvent> kafkaTemplate;
 
-    public void sendUserEvent(UserEvent userEvent){
+    public void sendUserEvent(UserCreatedEvent userCreatedEvent){
         try{
-            kafkaTemplate.send(userTopic,userEvent.getUserId().toString() ,userEvent).whenComplete((result,ex) -> {
+            kafkaTemplate.send(userTopic, userCreatedEvent.getUserId().toString() , userCreatedEvent).whenComplete((result, ex) -> {
                 if(ex == null){
                     log.info("User event published successfully. Offset={}",result.getRecordMetadata().offset());
                 }
                 else{
-                    log.error("Failed to publish user event for user {}",userEvent.getUserId(),ex);
+                    log.error("Failed to publish user event for user {}", userCreatedEvent.getUserId(),ex);
                 }
             });
         } catch (Exception ex) {

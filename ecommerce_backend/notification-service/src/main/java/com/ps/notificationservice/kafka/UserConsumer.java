@@ -1,6 +1,6 @@
 package com.ps.notificationservice.kafka;
 
-import com.ps.common.event.UserEvent;
+import com.ps.common.event.UserCreatedEvent;
 import com.ps.notificationservice.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ public class UserConsumer {
     private final EmailService emailService;
 
     @KafkaListener(topics = "user-topic", groupId = "notification-group")
-    public void consume(UserEvent event) {
+    public void consume(UserCreatedEvent event) {
         try {
             log.info("Received notification for user {}", event.getUserId());
             emailService.sendEmail(event.getRecipient(), event.getSubject(), event.getMessage());

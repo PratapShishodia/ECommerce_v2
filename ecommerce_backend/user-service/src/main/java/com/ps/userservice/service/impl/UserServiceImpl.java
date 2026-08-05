@@ -1,6 +1,6 @@
 package com.ps.userservice.service.impl;
 
-import com.ps.common.event.UserEvent;
+import com.ps.common.event.UserCreatedEvent;
 import com.ps.userservice.kafka.UserProducer;
 import com.ps.userservice.model.dto.UserRequestDTO;
 import com.ps.userservice.model.dto.UserResponseDTO;
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setActivationToken_EXPIRATION(LocalDateTime.now().plusMinutes(15));
         Users savedUser = userRepo.save(user);
-        String activationLink = "http://localhost:8080/api/user/activate?token=" + savedUser.getActivationToken();
+        String activationLink = "http://localhost:8081/api/user/activate/" + savedUser.getActivationToken();
         String subject = "Profile Activation Link";
         String body = """
                 Hi %s,
@@ -81,13 +81,13 @@ public class UserServiceImpl implements UserService {
                 If you didn't create this account, you can safely ignore this email.
                 """.formatted(savedUser.getName(), activationLink);
 
-        UserEvent userEvent = UserEvent.builder()
+        UserCreatedEvent userCreatedEvent = UserCreatedEvent.builder()
                 .userId(savedUser.getUserId())
                 .subject(subject)
                 .message(body)
                 .recipient(savedUser.getEmail())
                 .build();
-        userProducer.sendUserEvent(userEvent);
+        userProducer.sendUserEvent(userCreatedEvent);
         return new LoginResponseDTO("SignUp Successful. An activation mail is send to registered Email", UserDTOMapper.toDTO(savedUser), null,null);
     }
 
@@ -156,13 +156,13 @@ public class UserServiceImpl implements UserService {
         userRepo.save(user);
         String subject = "Forget Password";
         String body = "Your OTP to reset your password is <b>" + OTP + "</b>. It is valid for 15 minutes.<br><br>If you didn't request this, please ignore this email.\\nRegards,\\nE-Commerce Team";
-        UserEvent userEvent = UserEvent.builder()
+        UserCreatedEvent userCreatedEvent = UserCreatedEvent.builder()
                 .userId(user.getUserId())
                 .message(body)
                 .subject(subject)
                 .recipient(user.getEmail())
                 .build();
-        userProducer.sendUserEvent(userEvent);
+        userProducer.sendUserEvent(userCreatedEvent);
     }
 
     @Override
